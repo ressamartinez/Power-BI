@@ -1,0 +1,1304 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="1/27/2020 11:05:01 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="T1LG-MEDINFO6"
+  DTS:CreatorName="AHMC\rcmartinez"
+  DTS:DTSID="{75A8AA14-E443-4611-8F5C-B2CFC31D1790}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="12.0.2430.0"
+  DTS:LocaleID="13321"
+  DTS:ObjectName="Volume and Revenue"
+  DTS:PackageType="5"
+  DTS:VersionBuild="37"
+  DTS:VersionGUID="{9F30FEB3-2693-43D5-BEC9-F84378B5CD58}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{40DF86BD-B830-4D3A-9D42-8674B169C739}"
+      DTS:ObjectName="DBPROD03.AHMC_DataAnalyticsDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=DBPROD03;Initial Catalog=AHMC_DataAnalyticsDB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DBPROD03.AmalgaPROD]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{7512283A-CB0D-4BF9-BBF8-F60699EA32BD}"
+      DTS:ObjectName="DBPROD03.AmalgaPROD">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=DBPROD03;Initial Catalog=AmalgaPROD;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\PAR - GJV INVOICES"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{ED1EB7E0-4E18-45B8-8426-B758060F14FF}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="PAR - GJV INVOICES"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\PAR - GJV INVOICES\Lookup"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Lookup"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [dbo].[volume_revenue]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [dbo].[volume_revenue]) [refTable]
+where [refTable].[patient_visit_id] = ? and [refTable].[ar_invoice_detail_id] = ? and [refTable].[related_ar_invoice_id] = ? and [refTable].[gl_transaction_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="patient_visit_id" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Policy" dataType="DT_WSTR" length="150" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Visit Type Group" dataType="DT_STR" length="3" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="GL Account Code" dataType="DT_WSTR" length="50" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="GL Account Name" dataType="DT_WSTR" length="150" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Effective Date" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Invoice Date" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="PAR" dataType="DT_WSTR" length="20" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Invoice Number" dataType="DT_STR" length="40" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Related Invoice" dataType="DT_STR" length="40" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Related Invoice Date" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Costcentre Code" dataType="DT_WSTR" length="20" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Costcentre" dataType="DT_WSTR" length="150" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Gross Amount" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="ar_invoice_detail_id" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="related_ar_invoice_id" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Policy Code" dataType="DT_WSTR" length="40" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="gl_transaction_id" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]};#{Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]};#{Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]};#{Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[gl_transaction_id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\PAR - GJV INVOICES\Lookup.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input].Columns[patient_visit_id]"
+                      cachedDataType="guid"
+                      cachedName="patient_visit_id"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">patient_visit_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input].Columns[ar_invoice_detail_id]"
+                      cachedDataType="guid"
+                      cachedName="ar_invoice_detail_id"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">ar_invoice_detail_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input].Columns[related_ar_invoice_id]"
+                      cachedDataType="guid"
+                      cachedName="related_ar_invoice_id"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">related_ar_invoice_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input].Columns[gl_transaction_id]"
+                      cachedDataType="guid"
+                      cachedName="gl_transaction_id"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[gl_transaction_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">gl_transaction_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\PAR - GJV INVOICES\Lookup.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\PAR - GJV INVOICES\Lookup.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\PAR - GJV INVOICES\Lookup.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\PAR - GJV INVOICES\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\PAR - GJV INVOICES\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\PAR - GJV INVOICES\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[volume_revenue]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\PAR - GJV INVOICES\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[patient_visit_id]"
+                      cachedDataType="guid"
+                      cachedName="patient_visit_id"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[patient_visit_id]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Policy]"
+                      cachedDataType="wstr"
+                      cachedLength="150"
+                      cachedName="Policy"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Policy]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Visit Type Group]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="Visit Type Group"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Visit Type Group]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Visit Type Group]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[GL Account Code]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="GL Account Code"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[GL Account Code]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Code]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[GL Account Name]"
+                      cachedDataType="wstr"
+                      cachedLength="150"
+                      cachedName="GL Account Name"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[GL Account Name]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Name]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Effective Date]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="Effective Date"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Effective Date]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Effective Date]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Invoice Date]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="Invoice Date"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Invoice Date]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Date]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[PAR]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="PAR"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[PAR]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[PAR]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Invoice Number]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="40"
+                      cachedName="Invoice Number"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Invoice Number]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Number]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Related Invoice]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="40"
+                      cachedName="Related Invoice"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Related Invoice]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Related Invoice Date]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="Related Invoice Date"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Related Invoice Date]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice Date]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Costcentre Code]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="Costcentre Code"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Costcentre Code]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre Code]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Costcentre]"
+                      cachedDataType="wstr"
+                      cachedLength="150"
+                      cachedName="Costcentre"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Costcentre]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Gross Amount]"
+                      cachedDataType="cy"
+                      cachedName="Gross Amount"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Gross Amount]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Gross Amount]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[ar_invoice_detail_id]"
+                      cachedDataType="guid"
+                      cachedName="ar_invoice_detail_id"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_detail_id]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[related_ar_invoice_id]"
+                      cachedDataType="guid"
+                      cachedName="related_ar_invoice_id"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[related_ar_invoice_id]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Policy Code]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="Policy Code"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Policy Code]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy Code]" />
+                    <inputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[gl_transaction_id]"
+                      cachedDataType="guid"
+                      cachedName="gl_transaction_id"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[gl_transaction_id]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[gl_transaction_id]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[patient_visit_id]"
+                      dataType="guid"
+                      name="patient_visit_id" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Policy]"
+                      dataType="wstr"
+                      length="150"
+                      name="Policy" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="Visit Type Group" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[GL Account Code]"
+                      dataType="wstr"
+                      length="50"
+                      name="GL Account Code" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[GL Account Name]"
+                      dataType="wstr"
+                      length="150"
+                      name="GL Account Name" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Effective Date]"
+                      dataType="dbTimeStamp"
+                      name="Effective Date" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[PAR]"
+                      dataType="wstr"
+                      length="20"
+                      name="PAR" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Invoice Number" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Related Invoice" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Related Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Costcentre Code]"
+                      dataType="wstr"
+                      length="20"
+                      name="Costcentre Code" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Costcentre]"
+                      dataType="wstr"
+                      length="150"
+                      name="Costcentre" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Gross Amount]"
+                      dataType="cy"
+                      name="Gross Amount" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      name="ar_invoice_detail_id" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[related_ar_invoice_id]"
+                      dataType="guid"
+                      name="related_ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Policy Code]"
+                      dataType="wstr"
+                      length="40"
+                      name="Policy Code" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[gl_transaction_id]"
+                      dataType="guid"
+                      name="gl_transaction_id" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\PAR - GJV INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\PAR - GJV INVOICES\OLE DB Source"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="OLE DB Source"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">declare @company_code varchar(3)
+DECLARE @date0 DATETIME 
+DECLARE @date1 DATETIME
+DECLARE @date2 DATETIME
+
+set @company_code = 'AHI'
+SET @date0 = DATEADD(MONTH, -1, GETDATE())
+SET @date1 = HISViews.dbo.GETFIRSTDATEOFMONTH(@date0)
+SET @date2 = HISViews.dbo.GETLASTDATEOFMONTH(@date0)
+
+--select @date1, @date2
+
+select  distinct 
+	temp.patient_visit_id,
+	temp.[Policy Code],
+	temp.Policy,
+	temp.[Visit Type Group],
+	temp.[GL Account Code],
+	temp.[GL Account Name],
+	temp.[Effective Date],
+	temp.[Invoice Date],
+	temp.PAR,
+	temp.[Invoice Number],
+	temp.[Related Invoice],
+	temp.[Related Invoice Date],
+	temp.[Costcentre Code],
+	temp.Costcentre,
+	temp.[Gross Amount],
+	temp.ar_invoice_detail_id,
+	temp.related_ar_invoice_id,
+	temp.gl_transaction_id
+
+from (
+
+	SELECT  
+			vtr.visit_type_group_rcd as [Visit Type Group]
+			,gac.gl_acct_code_code as [GL Account Code]
+			,gac.name_l as [GL Account Name]
+			,gac2.gl_acct_code_code as main_gl_code
+			,gac2.name_l as main_gl_name
+			,case when cd.patient_visit_id is null then (Select distinct _cd.patient_visit_id from charge_detail _cd
+																inner join ar_invoice_detail _ard on _cd.charge_detail_id = _ard.charge_detail_id
+																inner join ar_invoice _ar on _ar.ar_invoice_id = _ard.ar_invoice_id
+														where _ar.ar_invoice_id = ar.related_ar_invoice_id) 
+			 else cd.patient_visit_id end as patient_visit_id
+			,ISNULL(po.name_l, 'Self Pay') as Policy
+			,po.short_code as [Policy Code]
+			,ar.transaction_date_time as [Invoice Date]
+			,glt.transaction_text as [PAR]
+			,ar.transaction_text as [Invoice Number]
+			,isnull((select transaction_text from ar_invoice where ar_invoice_id = ar.related_ar_invoice_id),'') as [Related Invoice]
+			,isnull((select transaction_date_time from ar_invoice where ar_invoice_id = ar.related_ar_invoice_id),'') as [Related Invoice Date]
+			,c.costcentre_code as [Costcentre Code]
+			,c.name_l as [Costcentre]
+			,ard.gross_amount * ar.credit_factor as [Gross Amount]
+			,ard.ar_invoice_detail_id
+			,ar.related_ar_invoice_id
+			,glt.effective_date as [Effective Date]
+			,glt.gl_transaction_id
+
+	from gl_transaction glt inner JOIN ar_invoice_nl_view ar on glt.gl_transaction_id = ar.gl_transaction_id
+							inner JOIN ar_invoice_detail ard on ar.ar_invoice_id = ard.ar_invoice_id
+							inner JOIN costcentre c on ard.costcentre_credit_id = c.costcentre_id
+							inner JOIN gl_acct_code gac on ard.gl_acct_code_credit_id = gac.gl_acct_code_id
+							inner join gl_acct_code gac2 on gac2.gl_acct_code_id = gac.parent_acct_code_id
+							LEFT JOIN charge_detail cd on ard.charge_detail_id = cd.charge_detail_id
+							LEFT JOIN policy po on ar.policy_id = po.policy_id
+							inner JOIN visit_type_ref vtr on ar.visit_type_rcd = vtr.visit_type_rcd
+
+	where glt.effective_date BETWEEN @date1 and @date2
+			and ar.transaction_status_rcd not in ('unk','voi')
+			and cd.deleted_date_time is null
+			and glt.company_code = @company_code
+			and glt.transaction_status_rcd = 'POS'
+)as temp
+where 
+		temp.main_gl_code in ('41', '42')
+		and temp.[GL Account Code] not in ('4219000')   --Other Revenue
+		and temp.[Gross Amount] &lt;&gt; 0
+
+UNION ALL
+
+select temp.patient_visit_id,
+        temp.[Policy Code],
+		temp.Policy,
+		temp.[Visit Type Group],
+		temp.[GL Account Code],
+		temp.[GL Account Name],
+		temp.[Effective Date],
+		temp.[Invoice Date],
+		temp.PAR,
+		temp.[Invoice Number],
+		temp.[Related Invoice],
+		temp.[Related Invoice Date],
+		temp.[Costcentre Code],
+		temp.Costcentre,
+		[Gross Amount] = temp.[Credit Amount] - temp.[Debit Amount],
+		temp.ar_invoice_detail_id,
+		temp.related_ar_invoice_id,
+		temp.gl_transaction_id
+
+from  (
+
+	select 		
+				vtr.visit_type_group_rcd as [Visit Type Group]
+				,gac.gl_acct_code_code as [GL Account Code]
+				,gac.name_l as [GL Account Name]
+				,gac2.gl_acct_code_code as main_gl_code
+				,gac2.name_l as main_gl_name
+			    ,case when cd.patient_visit_id is null then (Select distinct _cd.patient_visit_id from charge_detail _cd
+																inner join ar_invoice_detail _ard on _cd.charge_detail_id = _ard.charge_detail_id
+																inner join ar_invoice _ar on _ar.ar_invoice_id = _ard.ar_invoice_id
+														where _ar.ar_invoice_id = ar.related_ar_invoice_id) 
+				 else cd.patient_visit_id end as patient_visit_id
+				,ISNULL(p.name_l, 'Self Pay') as Policy
+				,p.short_code as [Policy Code]
+				,ar.transaction_date_time as [Invoice Date]
+				,gt.transaction_text as [PAR]
+				,ar.transaction_text as [Invoice Number]
+				,isnull((select transaction_text from ar_invoice where ar_invoice_id = ar.related_ar_invoice_id),'') as [Related Invoice]
+				,isnull((select transaction_date_time from ar_invoice where ar_invoice_id = ar.related_ar_invoice_id),'') as [Related Invoice Date]
+				,c.costcentre_code as [Costcentre Code]
+				,c.name_l as [Costcentre]
+				,[Debit Amount] = case when debit_flag = 1 then gtd.amount else '-' end
+				,[Credit Amount] = case when debit_flag = 0 then gtd.amount else '-' end
+				,ard.ar_invoice_detail_id
+				,ar.related_ar_invoice_id
+				,gt.effective_date as [Effective Date]
+				,gt.gl_transaction_id
+
+
+	from		gl_transaction_nl_view gt
+	inner join gl_transaction_detail_nl_view gtd on gtd.gl_transaction_id = gt.gl_transaction_id 
+	inner JOIN costcentre c on gtd.costcentre_id = c.costcentre_id
+	inner join gl_acct_code_nl_view gac on gac.gl_acct_code_id = gtd.gl_acct_code_id
+	inner join gl_acct_code gac2 on gac2.gl_acct_code_id = gac.parent_acct_code_id
+	inner JOIN visit_type_ref vtr on gtd.visit_type_rcd = vtr.visit_type_rcd
+	left JOIN ar_invoice_nl_view ar on gt.gl_transaction_id = ar.gl_transaction_id
+	left JOIN ar_invoice_detail ard on ar.ar_invoice_id = ard.ar_invoice_id
+	LEFT JOIN charge_detail cd on ard.charge_detail_id = cd.charge_detail_id
+	LEFT JOIN policy p on ar.policy_id = p.policy_id
+
+	where gt.effective_date BETWEEN @date1 and @date2
+		and	gt.company_code = @company_code
+		and	gt.transaction_status_rcd = 'POS'
+		and gt.user_transaction_type_id = '8566FA00-63FE-11DA-BB34-000E0C7F3ED2'    --GJV
+
+
+) as temp
+where  main_gl_code in ('41', '42')
+		and temp.[GL Account Code] not in ('4219000')   --Other Revenue
+
+order by temp.[Effective Date]</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\PAR - GJV INVOICES\OLE DB Source.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DBPROD03.AmalgaPROD]"
+                  connectionManagerRefId="Package.ConnectionManagers[DBPROD03.AmalgaPROD]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[patient_visit_id]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]"
+                      name="patient_visit_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Policy]"
+                      length="150"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy]"
+                      name="Policy"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Visit Type Group]"
+                      length="3"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Visit Type Group]"
+                      name="Visit Type Group"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Code]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GL Account Code]"
+                      length="50"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Code]"
+                      name="GL Account Code"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GL Account Name]"
+                      length="150"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Name]"
+                      name="GL Account Name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Effective Date]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Effective Date]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Effective Date]"
+                      name="Effective Date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Invoice Date]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Date]"
+                      name="Invoice Date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[PAR]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PAR]"
+                      length="20"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[PAR]"
+                      name="PAR"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Invoice Number]"
+                      length="40"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Number]"
+                      name="Invoice Number"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice]"
+                      length="40"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice]"
+                      name="Related Invoice"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice Date]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice Date]"
+                      name="Related Invoice Date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre Code]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Costcentre Code]"
+                      length="20"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre Code]"
+                      name="Costcentre Code"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Costcentre]"
+                      length="150"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre]"
+                      name="Costcentre"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Gross Amount]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Gross Amount]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Gross Amount]"
+                      name="Gross Amount"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_detail_id]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]"
+                      name="ar_invoice_detail_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[related_ar_invoice_id]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]"
+                      name="related_ar_invoice_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy Code]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Policy Code]"
+                      length="40"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy Code]"
+                      name="Policy Code"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[gl_transaction_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[gl_transaction_id]"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[gl_transaction_id]"
+                      name="gl_transaction_id"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[patient_visit_id]"
+                      dataType="guid"
+                      name="patient_visit_id" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Policy]"
+                      dataType="wstr"
+                      length="150"
+                      name="Policy" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="Visit Type Group" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GL Account Code]"
+                      dataType="wstr"
+                      length="50"
+                      name="GL Account Code" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GL Account Name]"
+                      dataType="wstr"
+                      length="150"
+                      name="GL Account Name" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Effective Date]"
+                      dataType="dbTimeStamp"
+                      name="Effective Date" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PAR]"
+                      dataType="wstr"
+                      length="20"
+                      name="PAR" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Invoice Number" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Related Invoice" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Related Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Costcentre Code]"
+                      dataType="wstr"
+                      length="20"
+                      name="Costcentre Code" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Costcentre]"
+                      dataType="wstr"
+                      length="150"
+                      name="Costcentre" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Gross Amount]"
+                      dataType="cy"
+                      name="Gross Amount" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      name="ar_invoice_detail_id" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[related_ar_invoice_id]"
+                      dataType="guid"
+                      name="related_ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Policy Code]"
+                      dataType="wstr"
+                      length="40"
+                      name="Policy Code" />
+                    <externalMetadataColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[gl_transaction_id]"
+                      dataType="guid"
+                      name="gl_transaction_id" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[patient_visit_id]"
+                      dataType="guid"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[patient_visit_id]"
+                      name="patient_visit_id" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Policy Code]"
+                      dataType="wstr"
+                      length="40"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Policy Code]"
+                      name="Policy Code" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Policy]"
+                      dataType="wstr"
+                      length="150"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Policy]"
+                      name="Policy" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Visit Type Group]"
+                      name="Visit Type Group" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GL Account Code]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GL Account Code]"
+                      name="GL Account Code" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GL Account Name]"
+                      dataType="wstr"
+                      length="150"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GL Account Name]"
+                      name="GL Account Name" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Effective Date]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Effective Date]"
+                      name="Effective Date" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Invoice Date]"
+                      name="Invoice Date" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PAR]"
+                      dataType="wstr"
+                      length="20"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PAR]"
+                      name="PAR" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Invoice Number]"
+                      name="Invoice Number" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Related Invoice]"
+                      name="Related Invoice" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Related Invoice Date]"
+                      name="Related Invoice Date" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Costcentre Code]"
+                      dataType="wstr"
+                      length="20"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Costcentre Code]"
+                      name="Costcentre Code" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Costcentre]"
+                      dataType="wstr"
+                      length="150"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Costcentre]"
+                      name="Costcentre" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Gross Amount]"
+                      dataType="cy"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Gross Amount]"
+                      name="Gross Amount" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ar_invoice_detail_id]"
+                      name="ar_invoice_detail_id" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[related_ar_invoice_id]"
+                      dataType="guid"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[related_ar_invoice_id]"
+                      name="related_ar_invoice_id" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[gl_transaction_id]"
+                      dataType="guid"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[gl_transaction_id]"
+                      name="gl_transaction_id" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\PAR - GJV INVOICES.Paths[Lookup No Match Output]"
+              endId="Package\PAR - GJV INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="Lookup No Match Output"
+              startId="Package\PAR - GJV INVOICES\Lookup.Outputs[Lookup No Match Output]" />
+            <path
+              refId="Package\PAR - GJV INVOICES.Paths[OLE DB Source Output]"
+              endId="Package\PAR - GJV INVOICES\Lookup.Inputs[Lookup Input]"
+              name="OLE DB Source Output"
+              startId="Package\PAR - GJV INVOICES\OLE DB Source.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="sql12">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="177,42"
+          Id="Package\PAR - GJV INVOICES"
+          TopLeft="239.5,132.5" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\PAR - GJV INVOICES">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="171,42"
+          Id="Package\PAR - GJV INVOICES\OLE DB Destination"
+          TopLeft="404,317" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\PAR - GJV INVOICES\OLE DB Source"
+          TopLeft="408,92" />
+        <NodeLayout
+          Size="113,42"
+          Id="Package\PAR - GJV INVOICES\Lookup"
+          TopLeft="430,195" />
+        <EdgeLayout
+          Id="Package\PAR - GJV INVOICES.Paths[OLE DB Source Output]"
+          TopLeft="484.75,134">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,61"
+              Start="0,0"
+              End="0,53.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,53.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\PAR - GJV INVOICES.Paths[Lookup No Match Output]"
+          TopLeft="488,237">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,80"
+              Start="0,0"
+              End="0,72.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,72.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-55.80638671875,30.4453125,111.6127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\PAR - GJV INVOICES\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\PAR - GJV INVOICES\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\PAR - GJV INVOICES\Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[dbo].[volume_revenue]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

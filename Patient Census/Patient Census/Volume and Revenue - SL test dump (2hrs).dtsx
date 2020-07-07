@@ -1,0 +1,1973 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="1/27/2020 11:05:01 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="T1LG-MEDINFO6"
+  DTS:CreatorName="AHMC\rcmartinez"
+  DTS:DTSID="{06699A51-F7D0-4D72-B4E0-F6F447FA72FD}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="12.0.2430.0"
+  DTS:LocaleID="13321"
+  DTS:ObjectName="Volume and Revenue - SL test dump  2hrs"
+  DTS:PackageType="5"
+  DTS:VersionBuild="39"
+  DTS:VersionGUID="{3CA5BC98-ACEC-437C-AA84-AA5DE85FA08D}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{C9128B2C-FA97-42E6-AB6D-490877910C8C}"
+      DTS:ObjectName="DBPROD03.AHMC_DataAnalyticsDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=DBPROD03;Initial Catalog=AHMC_DataAnalyticsDB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DBPROD03.AmalgaPROD]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{37630CC5-0CD6-48CB-90B5-FE55ABF20FC3}"
+      DTS:ObjectName="DBPROD03.AmalgaPROD">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=DBPROD03;Initial Catalog=AmalgaPROD;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Execute SQL Task"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{13318716-7A90-4FD8-AA28-8A0248D0997E}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Execute SQL Task"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{C9128B2C-FA97-42E6-AB6D-490877910C8C}"
+          SQLTask:SqlStatementSource="update temp_volume_revenue&#xA;set [transaction_status_rcd] = src.[lkup_transaction_status_rcd],&#xA;    [lu_updated] = src.[lkup_lu_updated]&#xA;&#xA;from temp_volume_revenue_stg src left JOIN temp_volume_revenue stage on src.ar_invoice_id = stage.ar_invoice_id&#xA;&#xA;&#xA;truncate table temp_volume_revenue_stg&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Execute SQL Task 1"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{2B87A4DD-C53A-4191-84B6-13D6030BC254}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Execute SQL Task 1"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{C9128B2C-FA97-42E6-AB6D-490877910C8C}"
+          SQLTask:SqlStatementSource="Truncate table temp_volume_revenue_2" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SL INVOICES"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{EB1329F4-7236-447A-B71A-B39CE6D07BB8}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SL INVOICES"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\SL INVOICES\Lookup"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Lookup"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [dbo].[temp_volume_revenue_2]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [dbo].[temp_volume_revenue_2]) [refTable]
+where [refTable].[patient_visit_id] = ? and [refTable].[ar_invoice_detail_id] = ? and [refTable].[related_ar_invoice_id] = ? and [refTable].[ar_invoice_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="patient_visit_id" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Policy" dataType="DT_WSTR" length="150" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Visit Type Group" dataType="DT_STR" length="3" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="GL Account Code" dataType="DT_WSTR" length="50" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="GL Account Name" dataType="DT_WSTR" length="150" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Invoice Date" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Invoice Number" dataType="DT_STR" length="40" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Related Invoice" dataType="DT_STR" length="40" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Related Invoice Date" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Costcentre Code" dataType="DT_WSTR" length="20" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Costcentre" dataType="DT_WSTR" length="150" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Gross Amount" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="ar_invoice_detail_id" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="related_ar_invoice_id" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Policy Code" dataType="DT_WSTR" length="40" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="ar_invoice_id" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="transaction_status_rcd" dataType="DT_STR" length="10" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="lu_updated" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]};#{Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]};#{Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]};#{Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\SL INVOICES\Lookup.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\SL INVOICES\Lookup.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\SL INVOICES\Lookup.Inputs[Lookup Input].Columns[patient_visit_id]"
+                      cachedDataType="guid"
+                      cachedName="patient_visit_id"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">patient_visit_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\SL INVOICES\Lookup.Inputs[Lookup Input].Columns[ar_invoice_detail_id]"
+                      cachedDataType="guid"
+                      cachedName="ar_invoice_detail_id"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">ar_invoice_detail_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\SL INVOICES\Lookup.Inputs[Lookup Input].Columns[related_ar_invoice_id]"
+                      cachedDataType="guid"
+                      cachedName="related_ar_invoice_id"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">related_ar_invoice_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\SL INVOICES\Lookup.Inputs[Lookup Input].Columns[ar_invoice_id]"
+                      cachedDataType="guid"
+                      cachedName="ar_invoice_id"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">ar_invoice_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\SL INVOICES\Lookup.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\SL INVOICES\Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\SL INVOICES\Lookup.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\SL INVOICES\Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\SL INVOICES\Lookup.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\SL INVOICES\Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\SL INVOICES\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\SL INVOICES\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\SL INVOICES\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\SL INVOICES\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[temp_volume_revenue_2]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\SL INVOICES\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[patient_visit_id]"
+                      cachedDataType="guid"
+                      cachedName="patient_visit_id"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[patient_visit_id]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Policy]"
+                      cachedDataType="wstr"
+                      cachedLength="150"
+                      cachedName="Policy"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Policy]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Visit Type Group]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="Visit Type Group"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Visit Type Group]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Visit Type Group]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[GL Account Code]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="GL Account Code"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[GL Account Code]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Code]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[GL Account Name]"
+                      cachedDataType="wstr"
+                      cachedLength="150"
+                      cachedName="GL Account Name"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[GL Account Name]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Name]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Invoice Date]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="Invoice Date"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Invoice Date]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Date]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Invoice Number]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="40"
+                      cachedName="Invoice Number"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Invoice Number]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Number]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Related Invoice]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="40"
+                      cachedName="Related Invoice"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Related Invoice]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Related Invoice Date]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="Related Invoice Date"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Related Invoice Date]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice Date]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Costcentre Code]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="Costcentre Code"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Costcentre Code]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre Code]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Costcentre]"
+                      cachedDataType="wstr"
+                      cachedLength="150"
+                      cachedName="Costcentre"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Costcentre]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Gross Amount]"
+                      cachedDataType="cy"
+                      cachedName="Gross Amount"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Gross Amount]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Gross Amount]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[ar_invoice_detail_id]"
+                      cachedDataType="guid"
+                      cachedName="ar_invoice_detail_id"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_detail_id]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[related_ar_invoice_id]"
+                      cachedDataType="guid"
+                      cachedName="related_ar_invoice_id"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[related_ar_invoice_id]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Policy Code]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="Policy Code"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Policy Code]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy Code]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[ar_invoice_id]"
+                      cachedDataType="guid"
+                      cachedName="ar_invoice_id"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_id]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_id]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[transaction_status_rcd]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="transaction_status_rcd"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[transaction_status_rcd]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[transaction_status_rcd]" />
+                    <inputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[lu_updated]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="lu_updated"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[lu_updated]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[lu_updated]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[patient_visit_id]"
+                      dataType="guid"
+                      name="patient_visit_id" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Policy]"
+                      dataType="wstr"
+                      length="150"
+                      name="Policy" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="Visit Type Group" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[GL Account Code]"
+                      dataType="wstr"
+                      length="50"
+                      name="GL Account Code" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[GL Account Name]"
+                      dataType="wstr"
+                      length="150"
+                      name="GL Account Name" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Invoice Number" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Related Invoice" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Related Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Costcentre Code]"
+                      dataType="wstr"
+                      length="20"
+                      name="Costcentre Code" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Costcentre]"
+                      dataType="wstr"
+                      length="150"
+                      name="Costcentre" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Gross Amount]"
+                      dataType="cy"
+                      name="Gross Amount" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      name="ar_invoice_detail_id" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[related_ar_invoice_id]"
+                      dataType="guid"
+                      name="related_ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Policy Code]"
+                      dataType="wstr"
+                      length="40"
+                      name="Policy Code" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_id]"
+                      dataType="guid"
+                      name="ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[transaction_status_rcd]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="transaction_status_rcd" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[lu_updated]"
+                      dataType="dbTimeStamp"
+                      name="lu_updated" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\SL INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\SL INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\SL INVOICES\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\SL INVOICES\OLE DB Source"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="OLE DB Source"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">declare @company_code varchar(3)
+DECLARE @date0 DATETIME 
+DECLARE @date1 DATETIME
+DECLARE @date2 DATETIME
+
+set @company_code = 'AHI'
+SET @date0 = GETDATE()
+SET @date1 = HISViews.dbo.GETFIRSTDATEOFMONTH(@date0)
+SET @date2 = SSIS.dbo.fn_TwoHRDateTo()
+
+
+select  distinct 
+	temp.patient_visit_id,
+	temp.[Policy Code],
+	temp.Policy,
+	temp.[Visit Type Group],
+	temp.[GL Account Code],
+	temp.[GL Account Name],
+	--temp.[Effective Date],
+	temp.[Invoice Date],
+	--temp.PAR,
+	temp.[Invoice Number],
+	temp.[Related Invoice],
+	temp.[Related Invoice Date],
+	temp.[Costcentre Code],
+	temp.Costcentre,
+	temp.[Gross Amount],
+	temp.ar_invoice_detail_id,
+	temp.related_ar_invoice_id,
+	temp.ar_invoice_id,
+	temp.transaction_status_rcd,
+	temp.lu_updated
+
+from (
+
+	SELECT  distinct
+			vtr.visit_type_group_rcd as [Visit Type Group]
+			,gac.gl_acct_code_code as [GL Account Code]
+			,gac.name_l as [GL Account Name]
+			,gac2.gl_acct_code_code as main_gl_code
+			,gac2.name_l as main_gl_name
+			,case when cd.patient_visit_id is null then (Select distinct _cd.patient_visit_id from charge_detail _cd
+																inner join ar_invoice_detail _ard on _cd.charge_detail_id = _ard.charge_detail_id
+																inner join ar_invoice _ar on _ar.ar_invoice_id = _ard.ar_invoice_id
+														where _ar.ar_invoice_id = ar.related_ar_invoice_id) 
+			 else cd.patient_visit_id end as patient_visit_id
+			,ISNULL(po.name_l, 'Self Pay') as Policy
+			,po.short_code as [Policy Code]
+			,ar.transaction_date_time as [Invoice Date]
+			--,glt.transaction_text as [PAR]
+			,ar.transaction_text as [Invoice Number]
+			,isnull((select transaction_text from ar_invoice where ar_invoice_id = ar.related_ar_invoice_id),'') as [Related Invoice]
+			,isnull((select transaction_date_time from ar_invoice where ar_invoice_id = ar.related_ar_invoice_id),'') as [Related Invoice Date]
+			,c.costcentre_code as [Costcentre Code]
+			,c.name_l as [Costcentre]
+			,ard.gross_amount * ar.credit_factor as [Gross Amount]
+			,ard.ar_invoice_detail_id
+			,ar.related_ar_invoice_id
+			,ar.ar_invoice_id
+			,ar.transaction_status_rcd
+			,ar.lu_updated
+			--,glt.effective_date as [Effective Date]
+
+	from ar_invoice ar --left join gl_transaction glt on ar.gl_transaction_id = glt.gl_transaction_id
+					   inner JOIN ar_invoice_detail ard on ar.ar_invoice_id = ard.ar_invoice_id
+					   inner JOIN costcentre c on ard.costcentre_credit_id = c.costcentre_id
+					   inner JOIN gl_acct_code gac on ard.gl_acct_code_credit_id = gac.gl_acct_code_id
+					   inner join gl_acct_code gac2 on gac2.gl_acct_code_id = gac.parent_acct_code_id
+					   LEFT JOIN charge_detail cd on ard.charge_detail_id = cd.charge_detail_id
+					   LEFT JOIN policy po on ar.policy_id = po.policy_id
+					   inner JOIN visit_type_ref vtr on ar.visit_type_rcd = vtr.visit_type_rcd
+
+	where ar.transaction_date_time between @date1 and @date2
+			--and ar.transaction_status_rcd not in ('unk','voi')
+			and cd.deleted_date_time is null
+			--and glt.company_code = @company_code
+			and ar.transaction_status_rcd = 'PSL'
+)as temp
+where 
+		temp.main_gl_code in ('41', '42')
+		and temp.[GL Account Code] not in ('4219000')   --Other Revenue
+		and temp.[Gross Amount] &lt;&gt; 0
+
+order by temp.[Invoice Date]</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\SL INVOICES\OLE DB Source.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DBPROD03.AmalgaPROD]"
+                  connectionManagerRefId="Package.ConnectionManagers[DBPROD03.AmalgaPROD]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[patient_visit_id]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[patient_visit_id]"
+                      name="patient_visit_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Policy]"
+                      length="150"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy]"
+                      name="Policy"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Visit Type Group]"
+                      length="3"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Visit Type Group]"
+                      name="Visit Type Group"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Code]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GL Account Code]"
+                      length="50"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Code]"
+                      name="GL Account Code"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GL Account Name]"
+                      length="150"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[GL Account Name]"
+                      name="GL Account Name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Invoice Date]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Date]"
+                      name="Invoice Date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Invoice Number]"
+                      length="40"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Invoice Number]"
+                      name="Invoice Number"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice]"
+                      length="40"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice]"
+                      name="Related Invoice"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice Date]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Related Invoice Date]"
+                      name="Related Invoice Date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre Code]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Costcentre Code]"
+                      length="20"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre Code]"
+                      name="Costcentre Code"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Costcentre]"
+                      length="150"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Costcentre]"
+                      name="Costcentre"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Gross Amount]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Gross Amount]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Gross Amount]"
+                      name="Gross Amount"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_detail_id]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]"
+                      name="ar_invoice_detail_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[related_ar_invoice_id]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]"
+                      name="related_ar_invoice_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy Code]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Policy Code]"
+                      length="40"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[Policy Code]"
+                      name="Policy Code"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_id]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[ar_invoice_id]"
+                      name="ar_invoice_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[transaction_status_rcd]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[transaction_status_rcd]"
+                      length="10"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[transaction_status_rcd]"
+                      name="transaction_status_rcd"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[lu_updated]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[lu_updated]"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].Columns[lu_updated]"
+                      name="lu_updated"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[patient_visit_id]"
+                      dataType="guid"
+                      name="patient_visit_id" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Policy]"
+                      dataType="wstr"
+                      length="150"
+                      name="Policy" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="Visit Type Group" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GL Account Code]"
+                      dataType="wstr"
+                      length="50"
+                      name="GL Account Code" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GL Account Name]"
+                      dataType="wstr"
+                      length="150"
+                      name="GL Account Name" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Invoice Number" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Related Invoice" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Related Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Costcentre Code]"
+                      dataType="wstr"
+                      length="20"
+                      name="Costcentre Code" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Costcentre]"
+                      dataType="wstr"
+                      length="150"
+                      name="Costcentre" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Gross Amount]"
+                      dataType="cy"
+                      name="Gross Amount" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      name="ar_invoice_detail_id" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[related_ar_invoice_id]"
+                      dataType="guid"
+                      name="related_ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Policy Code]"
+                      dataType="wstr"
+                      length="40"
+                      name="Policy Code" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_id]"
+                      dataType="guid"
+                      name="ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[transaction_status_rcd]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="transaction_status_rcd" />
+                    <externalMetadataColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[lu_updated]"
+                      dataType="dbTimeStamp"
+                      name="lu_updated" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[patient_visit_id]"
+                      dataType="guid"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[patient_visit_id]"
+                      name="patient_visit_id" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Policy Code]"
+                      dataType="wstr"
+                      length="40"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Policy Code]"
+                      name="Policy Code" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Policy]"
+                      dataType="wstr"
+                      length="150"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Policy]"
+                      name="Policy" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Visit Type Group]"
+                      name="Visit Type Group" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GL Account Code]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GL Account Code]"
+                      name="GL Account Code" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GL Account Name]"
+                      dataType="wstr"
+                      length="150"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GL Account Name]"
+                      name="GL Account Name" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Invoice Date]"
+                      name="Invoice Date" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Invoice Number]"
+                      name="Invoice Number" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Related Invoice]"
+                      name="Related Invoice" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Related Invoice Date]"
+                      name="Related Invoice Date" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Costcentre Code]"
+                      dataType="wstr"
+                      length="20"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Costcentre Code]"
+                      name="Costcentre Code" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Costcentre]"
+                      dataType="wstr"
+                      length="150"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Costcentre]"
+                      name="Costcentre" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Gross Amount]"
+                      dataType="cy"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Gross Amount]"
+                      name="Gross Amount" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ar_invoice_detail_id]"
+                      name="ar_invoice_detail_id" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[related_ar_invoice_id]"
+                      dataType="guid"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[related_ar_invoice_id]"
+                      name="related_ar_invoice_id" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ar_invoice_id]"
+                      dataType="guid"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ar_invoice_id]"
+                      name="ar_invoice_id" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[transaction_status_rcd]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[transaction_status_rcd]"
+                      name="transaction_status_rcd" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[lu_updated]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[lu_updated]"
+                      name="lu_updated" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\SL INVOICES.Paths[Lookup No Match Output]"
+              endId="Package\SL INVOICES\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="Lookup No Match Output"
+              startId="Package\SL INVOICES\Lookup.Outputs[Lookup No Match Output]" />
+            <path
+              refId="Package\SL INVOICES.Paths[OLE DB Source Output]"
+              endId="Package\SL INVOICES\Lookup.Inputs[Lookup Input]"
+              name="OLE DB Source Output"
+              startId="Package\SL INVOICES\OLE DB Source.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Stage table"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{29CD8537-3BCF-4B19-A933-5C0FE88AA20F}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Stage table"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Stage table\Stage table"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Stage table"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[temp_volume_revenue_stg]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Stage table\Stage table.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DBPROD03.AHMC_DataAnalyticsDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].Columns[patient_visit_id]"
+                      cachedDataType="guid"
+                      cachedName="patient_visit_id"
+                      externalMetadataColumnId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[patient_visit_id]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[patient_visit_id]" />
+                    <inputColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].Columns[ar_invoice_detail_id]"
+                      cachedDataType="guid"
+                      cachedName="ar_invoice_detail_id"
+                      externalMetadataColumnId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_detail_id]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]" />
+                    <inputColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].Columns[related_ar_invoice_id]"
+                      cachedDataType="guid"
+                      cachedName="related_ar_invoice_id"
+                      externalMetadataColumnId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[related_ar_invoice_id]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]" />
+                    <inputColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].Columns[ar_invoice_id]"
+                      cachedDataType="guid"
+                      cachedName="ar_invoice_id"
+                      externalMetadataColumnId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_id]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[ar_invoice_id]" />
+                    <inputColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].Columns[transaction_status_rcd]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="transaction_status_rcd"
+                      externalMetadataColumnId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[lkup_transaction_status_rcd]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[transaction_status_rcd]" />
+                    <inputColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].Columns[lu_updated]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="lu_updated"
+                      externalMetadataColumnId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[lkup_lu_updated]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[lu_updated]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[patient_visit_id]"
+                      dataType="guid"
+                      name="patient_visit_id" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      name="ar_invoice_detail_id" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[related_ar_invoice_id]"
+                      dataType="guid"
+                      name="related_ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[ar_invoice_id]"
+                      dataType="guid"
+                      name="ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[lkup_transaction_status_rcd]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="lkup_transaction_status_rcd" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input].ExternalColumns[lkup_lu_updated]"
+                      dataType="dbTimeStamp"
+                      name="lkup_lu_updated" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Stage table\Stage table.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Stage table\Stage table.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Stage table\Stage table.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Stage table\Stage table.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Stage table\Stage table.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Stage table\Voided transactions"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Voided transactions"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">declare @company_code varchar(3)
+DECLARE @date0 DATETIME 
+DECLARE @date1 DATETIME
+DECLARE @date2 DATETIME
+
+SET @date0 = GETDATE()
+SET @date1 = HISViews.dbo.GETFIRSTDATEOFMONTH(@date0)
+SET @date2 = HISViews.dbo.GETLASTDATEOFMONTH(@date0)
+
+select  distinct 
+	temp.patient_visit_id,
+	temp.[Policy Code],
+	temp.Policy,
+	temp.[Visit Type Group],
+	temp.[GL Account Code],
+	temp.[GL Account Name],
+	--temp.[Effective Date],
+	temp.[Invoice Date],
+	--temp.PAR,
+	temp.[Invoice Number],
+	temp.[Related Invoice],
+	temp.[Related Invoice Date],
+	temp.[Costcentre Code],
+	temp.Costcentre,
+	temp.[Gross Amount],
+	temp.ar_invoice_detail_id,
+	temp.related_ar_invoice_id,
+	temp.ar_invoice_id,
+	temp.transaction_status_rcd,
+	temp.lu_updated
+
+from (
+
+	SELECT  distinct
+			vtr.visit_type_group_rcd as [Visit Type Group]
+			,gac.gl_acct_code_code as [GL Account Code]
+			,gac.name_l as [GL Account Name]
+			,gac2.gl_acct_code_code as main_gl_code
+			,gac2.name_l as main_gl_name
+			,case when cd.patient_visit_id is null then (Select distinct _cd.patient_visit_id from charge_detail _cd
+																inner join ar_invoice_detail _ard on _cd.charge_detail_id = _ard.charge_detail_id
+																inner join ar_invoice _ar on _ar.ar_invoice_id = _ard.ar_invoice_id
+														where _ar.ar_invoice_id = ar.related_ar_invoice_id) 
+			 else cd.patient_visit_id end as patient_visit_id
+			,ISNULL(po.name_l, 'Self Pay') as Policy
+			,po.short_code as [Policy Code]
+			,ar.transaction_date_time as [Invoice Date]
+			--,glt.transaction_text as [PAR]
+			,ar.transaction_text as [Invoice Number]
+			,isnull((select transaction_text from ar_invoice where ar_invoice_id = ar.related_ar_invoice_id),'') as [Related Invoice]
+			,isnull((select transaction_date_time from ar_invoice where ar_invoice_id = ar.related_ar_invoice_id),'') as [Related Invoice Date]
+			,c.costcentre_code as [Costcentre Code]
+			,c.name_l as [Costcentre]
+			,ard.gross_amount * ar.credit_factor as [Gross Amount]
+			,ard.ar_invoice_detail_id
+			,ar.related_ar_invoice_id
+			,ar.ar_invoice_id
+			,ar.transaction_status_rcd
+			,ar.lu_updated
+			--,glt.effective_date as [Effective Date]
+
+	from ar_invoice ar --left join gl_transaction glt on ar.gl_transaction_id = glt.gl_transaction_id
+					   inner JOIN ar_invoice_detail ard on ar.ar_invoice_id = ard.ar_invoice_id
+					   inner JOIN costcentre c on ard.costcentre_credit_id = c.costcentre_id
+					   inner JOIN gl_acct_code gac on ard.gl_acct_code_credit_id = gac.gl_acct_code_id
+					   inner join gl_acct_code gac2 on gac2.gl_acct_code_id = gac.parent_acct_code_id
+					   LEFT JOIN charge_detail cd on ard.charge_detail_id = cd.charge_detail_id
+					   LEFT JOIN policy po on ar.policy_id = po.policy_id
+					   inner JOIN visit_type_ref vtr on ar.visit_type_rcd = vtr.visit_type_rcd
+
+	where CAST(CONVERT(VARCHAR(10),ar.transaction_date_time,101) as SMALLDATETIME) &gt;= CAST(CONVERT(VARCHAR(10),@date1,101) as SMALLDATETIME)
+	        and CAST(CONVERT(VARCHAR(10),ar.transaction_date_time,101) as SMALLDATETIME) &lt;= CAST(CONVERT(VARCHAR(10),@date2,101) as SMALLDATETIME)
+			--and ar.transaction_status_rcd not in ('unk','voi')
+			and cd.deleted_date_time is null
+			--and glt.company_code = @company_code
+			and ar.transaction_status_rcd = 'VOI'
+)as temp
+where 
+		temp.main_gl_code in ('41', '42')
+		and temp.[GL Account Code] not in ('4219000')   --Other Revenue
+		and temp.[Gross Amount] &lt;&gt; 0
+
+order by temp.[Invoice Date]</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Stage table\Voided transactions.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DBPROD03.AmalgaPROD]"
+                  connectionManagerRefId="Package.ConnectionManagers[DBPROD03.AmalgaPROD]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[patient_visit_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[patient_visit_id]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[patient_visit_id]"
+                      name="patient_visit_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_detail_id]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[ar_invoice_detail_id]"
+                      name="ar_invoice_detail_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[related_ar_invoice_id]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[related_ar_invoice_id]"
+                      name="related_ar_invoice_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[ar_invoice_id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_id]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[ar_invoice_id]"
+                      name="ar_invoice_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[transaction_status_rcd]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[transaction_status_rcd]"
+                      length="10"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[transaction_status_rcd]"
+                      name="transaction_status_rcd"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[lu_updated]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[lu_updated]"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].Columns[lu_updated]"
+                      name="lu_updated"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[patient_visit_id]"
+                      dataType="guid"
+                      name="patient_visit_id" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Policy Code]"
+                      dataType="wstr"
+                      length="40"
+                      name="Policy Code" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Policy]"
+                      dataType="wstr"
+                      length="150"
+                      name="Policy" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Visit Type Group]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="Visit Type Group" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[GL Account Code]"
+                      dataType="wstr"
+                      length="50"
+                      name="GL Account Code" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[GL Account Name]"
+                      dataType="wstr"
+                      length="150"
+                      name="GL Account Name" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Invoice Number]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Invoice Number" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice]"
+                      codePage="1252"
+                      dataType="str"
+                      length="40"
+                      name="Related Invoice" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Related Invoice Date]"
+                      dataType="dbTimeStamp"
+                      name="Related Invoice Date" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Costcentre Code]"
+                      dataType="wstr"
+                      length="20"
+                      name="Costcentre Code" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Costcentre]"
+                      dataType="wstr"
+                      length="150"
+                      name="Costcentre" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[Gross Amount]"
+                      dataType="cy"
+                      name="Gross Amount" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      name="ar_invoice_detail_id" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[related_ar_invoice_id]"
+                      dataType="guid"
+                      name="related_ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[ar_invoice_id]"
+                      dataType="guid"
+                      name="ar_invoice_id" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[transaction_status_rcd]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="transaction_status_rcd" />
+                    <externalMetadataColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output].ExternalColumns[lu_updated]"
+                      dataType="dbTimeStamp"
+                      name="lu_updated" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[patient_visit_id]"
+                      dataType="guid"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[patient_visit_id]"
+                      name="patient_visit_id" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[ar_invoice_detail_id]"
+                      dataType="guid"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[ar_invoice_detail_id]"
+                      name="ar_invoice_detail_id" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[related_ar_invoice_id]"
+                      dataType="guid"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[related_ar_invoice_id]"
+                      name="related_ar_invoice_id" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[ar_invoice_id]"
+                      dataType="guid"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[ar_invoice_id]"
+                      name="ar_invoice_id" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[transaction_status_rcd]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[transaction_status_rcd]"
+                      name="transaction_status_rcd" />
+                    <outputColumn
+                      refId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[lu_updated]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Error Output].Columns[lu_updated]"
+                      name="lu_updated" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Stage table.Paths[OLE DB Source Output]"
+              endId="Package\Stage table\Stage table.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Stage table\Voided transactions.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{7DD12AE9-CB0A-4652-8992-E08961CEB09F}"
+      DTS:From="Package\SL INVOICES"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Stage table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{D5FB7E0E-C3A9-42F2-8BD9-350D2BE733FC}"
+      DTS:From="Package\Stage table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Execute SQL Task" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{DE989D13-7738-4BC0-83D9-14E9497B512B}"
+      DTS:From="Package\Execute SQL Task 1"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SL INVOICES" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="sql12">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Execute SQL Task"
+          TopLeft="236,440" />
+        <NodeLayout
+          Size="141,42"
+          Id="Package\SL INVOICES"
+          TopLeft="251.5,191.5" />
+        <NodeLayout
+          Size="132,42"
+          Id="Package\Stage table"
+          TopLeft="256,315" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="322,233.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,81.5"
+              Start="0,0"
+              End="0,74">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,74" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="319.75,357">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,83"
+              Start="0,0"
+              End="0,75.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,75.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="172,42"
+          Id="Package\Execute SQL Task 1"
+          TopLeft="236,66" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="322,108">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,83.5"
+              Start="0,0"
+              End="0,76">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,76" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\SL INVOICES">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="171,42"
+          Id="Package\SL INVOICES\OLE DB Destination"
+          TopLeft="399,323" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\SL INVOICES\OLE DB Source"
+          TopLeft="408,91" />
+        <NodeLayout
+          Size="113,42"
+          Id="Package\SL INVOICES\Lookup"
+          TopLeft="425,206" />
+        <EdgeLayout
+          Id="Package\SL INVOICES.Paths[OLE DB Source Output]"
+          TopLeft="482.25,133">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,73"
+              Start="0,0"
+              End="0,65.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,65.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SL INVOICES.Paths[Lookup No Match Output]"
+          TopLeft="483,248">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,75"
+              Start="0,0"
+              End="0,67.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,67.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-55.80638671875,27.9453125,111.6127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SL INVOICES\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SL INVOICES\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SL INVOICES\Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[dbo].[temp_volume_revenue_2]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Stage table">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Stage table\Voided transactions"
+          TopLeft="293,104" />
+        <NodeLayout
+          Size="132,42"
+          Id="Package\Stage table\Stage table"
+          TopLeft="313,269" />
+        <EdgeLayout
+          Id="Package\Stage table.Paths[OLE DB Source Output]"
+          TopLeft="378.75,146">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,123"
+              Start="0,0"
+              End="0,115.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,115.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Stage table\Stage table">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Stage table\Voided transactions">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
