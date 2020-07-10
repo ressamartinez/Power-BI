@@ -150,7 +150,7 @@ from (
 																													where subr.subregion_id = adnv.subregion_id) end as subregion_id
 			,case when adnv.city_id is not NULL then (SELECT subr.name_l as subregion
 														from AmalgaPROD.dbo.subregion_nl_view subr
-														where subr.subregion_id = adnv.subregion_id) else (SELECT subr.name_l as subregion
+														where subr.subregion_id = city.subregion_id) else (SELECT subr.name_l as subregion
 																											from AmalgaPROD.dbo.subregion_nl_view subr
 																											where subr.subregion_id = adnv.subregion_id) end as Subregion
 			,case when panv.person_address_type_rcd is NULL then 'N/A' ELSE panv.person_address_type_rcd end as [Address Type]
@@ -324,7 +324,7 @@ UNION ALL
 																													where subr.subregion_id = adnv.subregion_id) end as subregion_id
 			,case when adnv.city_id is not NULL then (SELECT subr.name_l as subregion
 														from AmalgaPROD.dbo.subregion_nl_view subr
-														where subr.subregion_id = adnv.subregion_id) else (SELECT subr.name_l as subregion
+														where subr.subregion_id = city.subregion_id) else (SELECT subr.name_l as subregion
 																											from AmalgaPROD.dbo.subregion_nl_view subr
 																											where subr.subregion_id = adnv.subregion_id) end as Subregion
 			,case when panv.person_address_type_rcd is NULL then 'N/A' ELSE panv.person_address_type_rcd end as [Address Type]
